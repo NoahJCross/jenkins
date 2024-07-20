@@ -1,66 +1,64 @@
 pipeline {
     agent any
     stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', 
+                          userRemoteConfigs: [[url: 'https://github.com/NoahJCross/jenkins.git']]])
+            }
+        }
         stage('Build') {
             steps {
                 script {
-                    // Example for Maven
-                    sh 'mvn clean install'
+                    bat 'echo Build stage'
                 }
             }
         }
         stage('Unit and Integration Tests') {
             steps {
                 script {
-                    // Example for JUnit
-                    sh 'mvn test'
+                    bat 'echo Unit and Integration Tests stage'
                 }
             }
         }
         stage('Code Analysis') {
             steps {
                 script {
-                    // Example for SonarQube
-                    sh 'mvn sonar:sonar'
+                    bat 'echo Code Analysis stage'
                 }
             }
         }
         stage('Security Scan') {
             steps {
                 script {
-                    // Example for OWASP ZAP
-                    sh 'zap-cli quick-scan http://your-staging-url'
+                    bat 'echo Security Scan stage'
                 }
             }
         }
         stage('Deploy to Staging') {
             steps {
                 script {
-                    // Example for AWS CLI
-                    sh 'aws deploy --application-name my-app --deployment-group-name staging-group'
+                    bat 'echo Deploy to Staging stage'
                 }
             }
         }
         stage('Integration Tests on Staging') {
             steps {
                 script {
-                    // Example for Selenium
-                    sh 'selenium-runner http://your-staging-url'
+                    bat 'echo Integration Tests on Staging stage'
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
                 script {
-                    // Example for AWS CLI
-                    sh 'aws deploy --application-name my-app --deployment-group-name production-group'
+                    bat 'echo Deploy to Production stage'
                 }
             }
         }
     }
     post {
         always {
-            // Corrected email notification
             emailext (
                 to: 'dev-team@example.com',
                 subject: "Jenkins Build ${currentBuild.fullDisplayName}",
