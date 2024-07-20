@@ -60,11 +60,13 @@ pipeline {
     }
     post {
         always {
-            // Send email notification with build status and logs
-            mail to: 'dev-team@example.com',
-                 subject: "Jenkins Build ${currentBuild.fullDisplayName}",
-                 body: "Build ${currentBuild.fullDisplayName} finished with status: ${currentBuild.currentResult}",
-                 attachLog: true
+            // Corrected email notification
+            emailext (
+                to: 'dev-team@example.com',
+                subject: "Jenkins Build ${currentBuild.fullDisplayName}",
+                body: "Build ${currentBuild.fullDisplayName} finished with status: ${currentBuild.currentResult}",
+                attachmentsPattern: '**/log/*.log'  // Adjust the pattern based on your log location
+            )
         }
     }
 }
