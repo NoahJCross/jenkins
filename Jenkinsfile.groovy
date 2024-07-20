@@ -1,70 +1,99 @@
 pipeline {
     agent any
+    environment {
+        EMAIL_RECIPIENT = 'developer@example.com'
+        STAGING_SERVER = 'staging-server-url'
+        PRODUCTION_SERVER = 'production-server-url'
+    }
     stages {
-        stage('Checkout') {
-            steps {
-                checkout([$class: 'GitSCM', 
-                          userRemoteConfigs: [[url: 'https://github.com/NoahJCross/jenkins.git']]])
-            }
-        }
         stage('Build') {
             steps {
                 script {
-                    bat 'echo Build stage'
+                    // Example tool: Maven
+                    echo 'Building the code using Maven...'
+                    sh 'mvn clean package'
                 }
             }
         }
         stage('Unit and Integration Tests') {
             steps {
                 script {
-                    bat 'echo Unit and Integration Tests stage'
+                    // Example tools: JUnit for unit tests, TestNG for integration tests
+                    echo 'Running unit tests using JUnit...'
+                    sh 'mvn test'
+                    echo 'Running integration tests using TestNG...'
+                    sh 'mvn verify'
                 }
             }
         }
         stage('Code Analysis') {
             steps {
                 script {
-                    bat 'echo Code Analysis stage'
+                    // Example tool: SonarQube
+                    echo 'Performing code analysis using SonarQube...'
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
         stage('Security Scan') {
             steps {
                 script {
-                    bat 'echo Security Scan stage'
+                    // Example tool: SonarQube for security or OWASP Dependency-Check
+                    echo 'Performing security scan using OWASP Dependency-Check...'
+                    sh 'dependency-check.sh'
                 }
             }
         }
         stage('Deploy to Staging') {
             steps {
                 script {
-                    bat 'echo Deploy to Staging stage'
+                    // Example tool: AWS CLI for deployment
+                    echo 'Deploying to staging server...'
+                    sh 'aws deploy push --application-name my-app --s3-location s3://my-bucket/my-app.zip'
                 }
             }
         }
         stage('Integration Tests on Staging') {
             steps {
                 script {
-                    bat 'echo Integration Tests on Staging stage'
+                    // Example tools: JUnit or Selenium
+                    echo 'Running integration tests on staging environment...'
+                    sh 'mvn verify'
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
                 script {
-                    bat 'echo Deploy to Production stage'
+                    // Example tool: AWS CLI for deployment
+                    echo 'Deploying to production server...'
+                    sh 'aws deploy push --application-name my-app --s3-location s3://my-bucket/my-app.zip'
                 }
             }
         }
     }
     post {
-        always {
-            emailext (
-                to: 'dev-team@example.com',
-                subject: "Jenkins Build ${currentBuild.fullDisplayName}",
-                body: "Build ${currentBuild.fullDisplayName} finished with status: ${currentBuild.currentResult}",
-                attachmentsPattern: '**/log/*.log'  // Adjust the pattern based on your log location
-            )
+        success {
+            script {
+                // Send success email
+                emailext(
+                    to: EMAIL_RECIPIENT,
+                    subject: 'Build Successful',
+                    body: 'The build was successful. Please check the Jenkins job for details.',
+                    attachLog: true
+                )
+            }
+        }
+        failure {
+            script {
+                // Send failure email
+                emailext(
+                    to: EMAIL_RECIPIENT,
+                    subject: 'Build Failed',
+                    body: 'The build failed. Please check the Jenkins job for details.',
+                    attachLog: true
+                )
+            }
         }
     }
 }
