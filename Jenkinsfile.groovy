@@ -21,8 +21,8 @@ pipeline {
             post {
                 always {
                     mail to: "s223226235@deakin.edu.au",
-                        subject: "Test Stage Status: ${currentBuild.currentResult}",
-                        body: "Test log attached: ${env.BUILD_URL}consoleText"
+                    subject: "Test Stage Status: ${currentBuild.currentResult}",
+                    body: "Test log attached: ${env.BUILD_URL}consoleText"
                 }
             }
         }
@@ -40,8 +40,8 @@ pipeline {
             post {
                 always {
                     mail to: "s223226235@deakin.edu.au",
-                        subject: "Security Scan Status: ${currentBuild.currentResult}",
-                        body: "Security scan log attached: ${env.BUILD_URL}consoleText"
+                    subject: "Security Scan Status: ${currentBuild.currentResult}",
+                    body: "Security scan log attached: ${env.BUILD_URL}consoleText"
                 }
             }
         }
