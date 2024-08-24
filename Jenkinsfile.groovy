@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                echo "Building the project using Maven..."
+                echo "Building the project using Maven"
             }
             post {
                 always {
@@ -16,11 +16,11 @@ pipeline {
 
         stage("Unit and Integration Tests") {
             steps {
-                echo "Running unit and integration tests using JUnit..."
+                echo "Running unit and integration tests using JUnit"
             }
             post {
                 always {
-                    mail to: "noahcrass@hotmail.com",
+                    mail to: "s223226235@deakin.edu.au",
                         subject: "Test Stage Status: ${currentBuild.currentResult}",
                         body: "Test log attached: ${env.BUILD_URL}consoleText"
                 }
@@ -29,17 +29,17 @@ pipeline {
 
         stage("Code Analysis") {
             steps {
-                echo "Running code analysis using SonarQube..."
+                echo "Running code analysis using SonarQube"
             }
         }
 
         stage("Security Scan") {
             steps {
-                echo "Performing security scan using OWASP Dependency Check..."
+                echo "Performing security scan using OWASP Dependency Check"
             }
             post {
                 always {
-                    mail to: "noahcrass@hotmail.com",
+                    mail to: "s223226235@deakin.edu.au",
                         subject: "Security Scan Status: ${currentBuild.currentResult}",
                         body: "Security scan log attached: ${env.BUILD_URL}consoleText"
                 }
@@ -48,19 +48,19 @@ pipeline {
 
         stage("Deploy to Staging") {
             steps {
-                echo "Deploying to staging environment (e.g., AWS EC2)..."
+                echo "Deploying to staging environment using AWS"
             }
         }
 
         stage("Integration Tests on Staging") {
             steps {
-                echo "Running integration tests on staging environment..."
+                echo "Running integration tests on staging environment"
             }
         }
 
         stage("Deploy to Production") {
             steps {
-                echo "Deploying to production environment (e.g., AWS EC2)..."
+                echo "Deploying to production environment using AWS"
             }
         }
     }
