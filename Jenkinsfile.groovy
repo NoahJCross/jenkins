@@ -23,7 +23,7 @@ pipeline {
 
        stage("Unit and Integration Tests") {
             steps {
-                echo "Running unit and integration tests using JUnit"
+                echo "Running unit and integration tests using JUnit."
             }
             post {
                 always {
