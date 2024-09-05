@@ -1,8 +1,7 @@
 pipeline {
     agent any
-
-    def getLogContent() {
-        return readFile("${env.WORKSPACE}/console.log")
+    environment {
+        EMAIL = 's223226235@deakin.edu.au' 
     }
     stages {
         stage("Build") {
@@ -12,7 +11,7 @@ pipeline {
             post {
                 always {
                     emailext (
-                        to: s223226235@deakin.edu.au, 
+                        to: env.EMAIL, 
                         subject: "Build Status ${currentBuild.currentResult}",
                         body: "Build details: ${env.BUILD_URL}",
                         attachLog: true,
@@ -29,7 +28,7 @@ pipeline {
             post {
                 always {
                     emailext (
-                        to: s223226235@deakin.edu.au, 
+                        to: env.EMAIL, 
                         subject: "Test Status ${currentBuild.currentResult}",
                         body: "Test details: ${env.BUILD_URL}",
                         attachLog: true,
@@ -52,7 +51,7 @@ pipeline {
             post {
                 always {
                     emailext (
-                        to: s223226235@deakin.edu.au, 
+                        to: env.EMAIL, 
                         subject: "Security Status ${currentBuild.currentResult}",
                         body: "Security details: ${env.BUILD_URL}",
                         attachLog: true,
