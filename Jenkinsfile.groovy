@@ -11,13 +11,14 @@ pipeline {
                         writeFile file: 'build-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
                         archiveArtifacts artifacts: 'build-log.txt'
                     }
-                    mail to: "s223226235@deakin.edu.au",
-                         subject: "Build Status: ${currentBuild.currentResult}",
-                         body: "Build log is attached.",
-                         attachLog: true
+                    emailext to: "s223226235@deakin.edu.au",
+                             subject: "Build Status: ${currentBuild.currentResult}",
+                             body: "Build log is attached.",
+                             attachmentsPattern: 'build-log.txt'
                 }
             }
         }
+
         stage("Unit and Integration Tests") {
             steps {
                 echo "Running unit and integration tests using JUnit"
@@ -28,18 +29,20 @@ pipeline {
                         writeFile file: 'test-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
                         archiveArtifacts artifacts: 'test-log.txt'
                     }
-                    mail to: "s223226235@deakin.edu.au",
-                         subject: "Test Stage Status: ${currentBuild.currentResult}",
-                         body: "Test log is attached.",
-                         attachLog: true
+                    emailext to: "s223226235@deakin.edu.au",
+                             subject: "Test Stage Status: ${currentBuild.currentResult}",
+                             body: "Test log is attached.",
+                             attachmentsPattern: 'test-log.txt'
                 }
             }
         }
+
         stage("Code Analysis") {
             steps {
                 echo "Running code analysis using SonarQube"
             }
         }
+
         stage("Security Scan") {
             steps {
                 echo "Performing security scan using OWASP Dependency Check"
@@ -47,26 +50,29 @@ pipeline {
             post {
                 always {
                     script {
-                        writeFile file: 'security-scan-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
-                        archiveArtifacts artifacts: 'security-scan-log.txt'
+                        writeFile file: 'security-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
+                        archiveArtifacts artifacts: 'security-log.txt'
                     }
-                    mail to: "s223226235@deakin.edu.au",
-                         subject: "Security Scan Status: ${currentBuild.currentResult}",
-                         body: "Security scan log is attached.",
-                         attachLog: true
+                    emailext to: "s223226235@deakin.edu.au",
+                             subject: "Security Scan Status: ${currentBuild.currentResult}",
+                             body: "Security scan log is attached.",
+                             attachmentsPattern: 'security-log.txt'
                 }
             }
         }
+
         stage("Deploy to Staging") {
             steps {
                 echo "Deploying to staging environment using AWS"
             }
         }
+
         stage("Integration Tests on Staging") {
             steps {
                 echo "Running integration tests on staging environment"
             }
         }
+
         stage("Deploy to Production") {
             steps {
                 echo "Deploying to production environment using AWS"
