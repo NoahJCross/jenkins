@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                echo "Building the project using Maven."
+                echo "Building the project using Maven"
             }
             post {
                 always {
