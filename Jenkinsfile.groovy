@@ -3,13 +3,18 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                echo "Building the project using Maven"
+                echo "Building the project using Maven."
             }
             post {
                 always {
+                    script {
+                        writeFile file: 'build-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
+                        archiveArtifacts artifacts: 'build-log.txt'
+                    }
                     mail to: "s223226235@deakin.edu.au",
                     subject: "Build Status: ${currentBuild.currentResult}",
-                    body: "Build log attached: ${env.BUILD_URL}consoleText"
+                    body: "Build log attached.",
+                    attachmentsPattern: 'build-log.txt'
                 }
             }
         }
@@ -20,9 +25,14 @@ pipeline {
             }
             post {
                 always {
+                    script {
+                        writeFile file: 'test-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
+                        archiveArtifacts artifacts: 'test-log.txt'
+                    }
                     mail to: "s223226235@deakin.edu.au",
                     subject: "Test Stage Status: ${currentBuild.currentResult}",
-                    body: "Test log attached: ${env.BUILD_URL}consoleText"
+                    body: "Test log attached.",
+                    attachmentsPattern: 'test-log.txt'
                 }
             }
         }
@@ -38,10 +48,15 @@ pipeline {
                 echo "Performing security scan using OWASP Dependency Check"
             }
             post {
-                always {
+                 always {
+                    script {
+                        writeFile file: 'security-scan-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
+                        archiveArtifacts artifacts: 'security-scan-log.txt'
+                    }
                     mail to: "s223226235@deakin.edu.au",
                     subject: "Security Scan Status: ${currentBuild.currentResult}",
-                    body: "Security scan log attached: ${env.BUILD_URL}consoleText"
+                    body: "Security scan log attached.",
+                    attachmentsPattern: 'security-scan-log.txt'
                 }
             }
         }
