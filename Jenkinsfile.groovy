@@ -11,13 +11,13 @@ pipeline {
             }
             post {
                 always {
-                mail to: "s223226235@deakin.edu.au",
-                    subject: "Build Status: ${currentBuild.currentResult}",
-                    body: "Build details: ${env.BUILD_URL}"
-
-                // Capture and attach the build log
-                def logContent = getLogContent()
-                attachBytes(fileName: 'build-log.txt', content: logContent.bytes)
+                    emailext (
+                        to: s223226235@deakin.edu.au, 
+                        subject: "Build Status ${currentBuild.currentResult}",
+                        body: "Build details: ${env.BUILD_URL}",
+                        attachLog: true,
+                        mimeType: 'text/html'
+                    )
                 }
             }
         }
@@ -28,12 +28,13 @@ pipeline {
             }
             post {
                 always {
-                mail to: "s223226235@deakin.edu.au",
-                    subject: "Test Status: ${currentBuild.currentResult}",
-                    body: "Test details: ${env.BUILD_URL}"
-
-                def logContent = getLogContent()
-                attachBytes(fileName: 'test-log.txt', content: logContent.bytes)
+                    emailext (
+                        to: s223226235@deakin.edu.au, 
+                        subject: "Test Status ${currentBuild.currentResult}",
+                        body: "Test details: ${env.BUILD_URL}",
+                        attachLog: true,
+                        mimeType: 'text/html'
+                    )
                 }
             }
         }
@@ -50,11 +51,13 @@ pipeline {
             }
             post {
                 always {
-                    mail to: "s223226235@deakin.edu.au",
-                        subject: "Security Scan Status: ${currentBuild.currentResult}",
-                        body: "Security scan details: ${env.BUILD_URL}" 
-                    def logContent = getLogContent()
-                    attachBytes(fileName: 'security-log.txt', content: logContent.bytes)
+                    emailext (
+                        to: s223226235@deakin.edu.au, 
+                        subject: "Security Status ${currentBuild.currentResult}",
+                        body: "Security details: ${env.BUILD_URL}",
+                        attachLog: true,
+                        mimeType: 'text/html'
+                    )
                 }
             }
         }
