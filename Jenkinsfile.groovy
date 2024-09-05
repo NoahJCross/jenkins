@@ -1,5 +1,9 @@
 pipeline {
     agent any
+
+    def getLogContent() {
+        return readFile("${env.WORKSPACE}/console.log")
+    }
     stages {
         stage("Build") {
             steps {
@@ -7,26 +11,29 @@ pipeline {
             }
             post {
                 always {
-                    mail to: "s223226235@deakin.edu.au",
-                        subject: "Build Status: ${currentBuild.currentResult}",
-                        body: "Build details: ${env.BUILD_URL}" 
-                    def logContent = readFile("${env.WORKSPACE}/console.log")
-                    attachBytes(fileName: 'build-log.txt', content: logContent.bytes)
+                mail to: "s223226235@deakin.edu.au",
+                    subject: "Build Status: ${currentBuild.currentResult}",
+                    body: "Build details: ${env.BUILD_URL}"
+
+                // Capture and attach the build log
+                def logContent = getLogContent()
+                attachBytes(fileName: 'build-log.txt', content: logContent.bytes)
                 }
             }
         }
 
-        stage("Unit and Integration Tests") {
+       stage("Unit and Integration Tests") {
             steps {
                 echo "Running unit and integration tests using JUnit"
             }
             post {
                 always {
-                    mail to: "s223226235@deakin.edu.au",
-                        subject: "Test Status: ${currentBuild.currentResult}",
-                        body: "Test details: ${env.BUILD_URL}" 
-                    def logContent = readFile("${env.WORKSPACE}/console.log")
-                    attachBytes(fileName: 'test-log.txt', content: logContent.bytes)
+                mail to: "s223226235@deakin.edu.au",
+                    subject: "Test Status: ${currentBuild.currentResult}",
+                    body: "Test details: ${env.BUILD_URL}"
+
+                def logContent = getLogContent()
+                attachBytes(fileName: 'test-log.txt', content: logContent.bytes)
                 }
             }
         }
@@ -46,7 +53,7 @@ pipeline {
                     mail to: "s223226235@deakin.edu.au",
                         subject: "Security Scan Status: ${currentBuild.currentResult}",
                         body: "Security scan details: ${env.BUILD_URL}" 
-                    def logContent = readFile("${env.WORKSPACE}/console.log")
+                    def logContent = getLogContent()
                     attachBytes(fileName: 'security-log.txt', content: logContent.bytes)
                 }
             }
