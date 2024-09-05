@@ -10,9 +10,8 @@ pipeline {
                     mail to: "s223226235@deakin.edu.au",
                         subject: "Build Status: ${currentBuild.currentResult}",
                         body: "Build details: ${env.BUILD_URL}" 
-                    fileAttachment attachments: [
-                        (fileId: 'build-log.txt', filePath: "${env.WORKSPACE}/console.log")
-                    ]
+                    def logContent = readFile("${env.WORKSPACE}/console.log")
+                    attachBytes(fileName: 'build-log.txt', content: logContent.bytes)
                 }
             }
         }
@@ -26,9 +25,8 @@ pipeline {
                     mail to: "s223226235@deakin.edu.au",
                         subject: "Test Status: ${currentBuild.currentResult}",
                         body: "Test details: ${env.BUILD_URL}" 
-                    fileAttachment attachments: [
-                        (fileId: 'test-log.txt', filePath: "${env.WORKSPACE}/console.log")
-                    ]
+                    def logContent = readFile("${env.WORKSPACE}/console.log")
+                    attachBytes(fileName: 'test-log.txt', content: logContent.bytes)
                 }
             }
         }
@@ -48,9 +46,8 @@ pipeline {
                     mail to: "s223226235@deakin.edu.au",
                         subject: "Security Scan Status: ${currentBuild.currentResult}",
                         body: "Security scan details: ${env.BUILD_URL}" 
-                    fileAttachment attachments: [
-                        (fileId: 'security-log.txt', filePath: "${env.WORKSPACE}/console.log")
-                    ]
+                    def logContent = readFile("${env.WORKSPACE}/console.log")
+                    attachBytes(fileName: 'security-log.txt', content: logContent.bytes)
                 }
             }
         }
