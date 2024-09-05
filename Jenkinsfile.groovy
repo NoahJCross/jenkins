@@ -7,23 +7,6 @@ pipeline {
         stage("Build") {
             steps {
                 echo "Building the project using Maven."
-                script{
-                    echo "Starting Mailing"
-                    def script = "String response = transport.getLastServerResponse();println \"Mail Response: \" + response;File file = new File(\"/var/jenkins_home/workspace/EMAIEXT2222/MailResponse.txt\");file.write response"
-                    emailext(
-                       to: env.EMAIL,
-                       subject: "Test",
-                       body: "Example test",
-                       replyTo: env.EMAIL,
-                       postsendScript: "$script"
-                    )
-                   sh "cat MailResponse.txt"
-                   def response = readFile(file: 'MailResponse.txt')
-                   if(!response.contains("2.0.0 OK")) {
-                       echo "BUILD FAILURE!!!!"
-                       currentBuild.result = 'FAILURE'
-                   }
-                }
             }
             post {
                 always {
