@@ -8,7 +8,8 @@ pipeline {
             post {
                 always {
                     script {
-                        writeFile file: 'build-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
+                        def log = currentBuild.getLog(1000).join('\n')
+                        writeFile file: 'build-log.txt', text: log
                         archiveArtifacts artifacts: 'build-log.txt'
                     }
                     emailext to: "s223226235@deakin.edu.au",
@@ -26,7 +27,8 @@ pipeline {
             post {
                 always {
                     script {
-                        writeFile file: 'test-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
+                        def log = currentBuild.getLog(1000).join('\n')
+                        writeFile file: 'test-log.txt', text: log
                         archiveArtifacts artifacts: 'test-log.txt'
                     }
                     emailext to: "s223226235@deakin.edu.au",
@@ -50,7 +52,8 @@ pipeline {
             post {
                 always {
                     script {
-                        writeFile file: 'security-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
+                        def log = currentBuild.getLog(1000).join('\n')
+                        writeFile file: 'security-log.txt', text: log
                         archiveArtifacts artifacts: 'security-log.txt'
                     }
                     emailext to: "s223226235@deakin.edu.au",
