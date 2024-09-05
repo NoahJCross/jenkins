@@ -3,18 +3,16 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                echo "Building the project using Maven"
+                echo "Building the project using Maven."
             }
             post {
                 always {
-                    script {
-                        writeFile file: 'build-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
-                        archiveArtifacts artifacts: 'build-log.txt'
-                    }
-                    emailext to: "s223226235@deakin.edu.au",
-                             subject: "Build Status: ${currentBuild.currentResult}",
-                             body: "Build log is attached.",
-                             attachmentsPattern: 'build-log.txt'
+                    mail to: "s223226235@deakin.edu.au",
+                        subject: "Build Status: ${currentBuild.currentResult}",
+                        body: "Build details: ${env.BUILD_URL}" 
+                    fileAttachment attachments: [
+                        (fileId: 'build-log.txt', filePath: "${env.WORKSPACE}/console.log")
+                    ]
                 }
             }
         }
@@ -25,14 +23,12 @@ pipeline {
             }
             post {
                 always {
-                    script {
-                        writeFile file: 'test-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
-                        archiveArtifacts artifacts: 'test-log.txt'
-                    }
-                    emailext to: "s223226235@deakin.edu.au",
-                             subject: "Test Stage Status: ${currentBuild.currentResult}",
-                             body: "Test log is attached.",
-                             attachmentsPattern: 'test-log.txt'
+                    mail to: "s223226235@deakin.edu.au",
+                        subject: "Test Status: ${currentBuild.currentResult}",
+                        body: "Test details: ${env.BUILD_URL}" 
+                    fileAttachment attachments: [
+                        (fileId: 'test-log.txt', filePath: "${env.WORKSPACE}/console.log")
+                    ]
                 }
             }
         }
@@ -49,14 +45,12 @@ pipeline {
             }
             post {
                 always {
-                    script {
-                        writeFile file: 'security-log.txt', text: "${currentBuild.rawBuild.getLog(1000).join('\n')}"
-                        archiveArtifacts artifacts: 'security-log.txt'
-                    }
-                    emailext to: "s223226235@deakin.edu.au",
-                             subject: "Security Scan Status: ${currentBuild.currentResult}",
-                             body: "Security scan log is attached.",
-                             attachmentsPattern: 'security-log.txt'
+                    mail to: "s223226235@deakin.edu.au",
+                        subject: "Security Scan Status: ${currentBuild.currentResult}",
+                        body: "Security scan details: ${env.BUILD_URL}" 
+                    fileAttachment attachments: [
+                        (fileId: 'security-log.txt', filePath: "${env.WORKSPACE}/console.log")
+                    ]
                 }
             }
         }
